@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Fetch medication count dynamically
   try {
-    const response = await fetch(`http://localhost:3001/medications/${currentUserId}`, {
+    const response = await fetch(`http://localhost:3000/medications/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const response = await fetch(`http://localhost:2999/reports/user/${currentUserId}`, {
+    const response = await fetch(`http://localhost:3000/reports/user/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   try {
-    const response = await fetch(`http://localhost:2998/tests/user/${currentUserId}`, {
+    const response = await fetch(`http://localhost:3000/tests/user/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

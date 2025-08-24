@@ -52,7 +52,7 @@ if (!token) { alert('Login required'); window.location.href="{% url 'pda_app:log
 
 const payload = JSON.parse(atob(token.split('.')[1]));
 const currentUserId = payload.userId;
-const API_URL = 'http://127.0.0.1:2998';
+const API_URL = 'http://127.0.0.1:3000';
 
 function testFormClick() {
   document.querySelector('.reportform_pdapro').style.display = 'block';
@@ -86,9 +86,9 @@ async function loadTests() {
     });
 
     const data = await res.json();
-    console.log('Tests response:', data); // check the structure
+    console.log('Tests response:', data); 
 
-    // Adjust according to your API structure
+  
     const tests = Array.isArray(data) ? data : data.tests || [];
     
     const list = document.getElementById('testList');

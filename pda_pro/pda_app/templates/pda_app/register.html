@@ -37,7 +37,7 @@
     };
 
     try {
-      const res = await fetch('http://localhost:3033/register', {
+      const res = await fetch('http://localhost:3000/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -46,15 +46,15 @@
       const result = await res.json();
 
       if (res.ok) {
-        document.getElementById('message').innerText = '✅ Registration successful!';
+        document.getElementById('message').innerText = 'Registration successful!';
         setTimeout(() => {
           window.location.href = "{% url 'pda_app:login' %}";
         }, 1500);
       } else {
-        document.getElementById('message').innerText = '❌ ' + (result.error || 'Registration failed');
+        document.getElementById('message').innerText = '' + (result.error || 'Registration failed');
       }
     } catch (err) {
-      document.getElementById('message').innerText = '⚠️ Server error';
+      document.getElementById('message').innerText = 'Server error';
     }
   });
 </script>
