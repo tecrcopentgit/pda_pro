@@ -1,0 +1,104 @@
+{% extends "pda_app/layout.html" %}
+
+{%load static%}
+
+{% block styles %}
+<link rel='stylesheet' href={% static 'pda_app/css/home.css' %}/>
+<link rel='stylesheet' href={% static 'pda_app/css/home2.css' %}/>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'pda_app/js/home_content.js' %}"></script>
+
+{% endblock %}
+{%block title%}Personal Medical Assistance{%endblock%}
+
+
+
+{% block content %}
+<div class='home_main'>
+<div id='info_box'>
+<p>The Personal Medical Assistance (PDA) app is a web-based platform that helps users manage health records, track medications, schedule appointments, and access emergency information.  
+</p>
+</div>
+<div class='maincontents_pdapro'>
+<div class='boxcontent_pdapro'>
+  <h1 class='medication_value'>0</h1>
+  <h4>Medications</h4>
+</div>
+
+<div class='boxcontent_pdapro'>
+    <h1 class='med_report'>0</h1>
+    <h4>Medical Reports</h4>
+  </div>
+
+  <div class='boxcontent_pdapro'>
+    <h1 class='med_tests'>0</h1>
+    <h4>Tests</h4>
+  </div>
+</div>
+
+
+<div class='health_tip'>
+  <h2>Health Tip</h2>
+<div id='tip_box'><h4><img src='https://cdn-icons-png.flaticon.com/128/15247/15247175.png'/>Stay Hydrated</h4>
+  <p>Stay Hydrated – Drink enough water throughout the day to keep your body active and alert.</p>
+</div>
+
+<div id='tip_box'><h4>Eat Balanced Meals<img src='https://cdn-icons-png.flaticon.com/128/14007/14007509.png'/></h4>
+  <p>Eat Balanced Meals – Include vegetables, fruits, proteins, and whole grains in your diet.</p>
+</div>
+<div id='tip_box'><h4><img src='https://cdn-icons-png.flaticon.com/128/4070/4070994.png'/>Exercise Regularly</h4>
+  <p>Practice Good Posture – Keep your back straight and shoulders relaxed to avoid strain.</p>
+</div>
+<div id='tip_box'><h4>Get Enough Sleep<img src='https://cdn-icons-png.flaticon.com/128/6061/6061593.png'/></h4>
+  <p>Practice Good Posture – Keep your back straight and shoulders relaxed to avoid strain.</p>
+</div>
+<div id='tip_box'><h4><img src='https://cdn-icons-png.flaticon.com/128/17774/17774380.png'/>Manage Stress</h4>
+  <p>Manage Stress – Practice relaxation techniques like meditation or yoga to reduce stress levels.</p>
+</div>
+<div id='tip_box'><h4>Regular Check-ups<img src='https://cdn-icons-png.flaticon.com/128/2382/2382533.png'/></h4>
+  <p>Regular Check-ups – Schedule regular health check-ups to monitor your health status.</p>
+
+</div>
+</div>
+
+
+<div class='avoid_tip'>
+  
+    <div id='avoid_box'>
+      <img src='https://cdn-icons-png.flaticon.com/128/12310/12310273.png'/>
+      <h4>No Smoking</h4>
+    </div>
+
+    <div id='avoid_box'>
+      <img src='https://cdn-icons-png.flaticon.com/128/1037/1037762.png'/>
+      <h4>Less Junk</h4>
+    </div>
+  
+    <div id='avoid_box'>
+      <img src='https://cdn-icons-png.flaticon.com/128/9321/9321217.png'/>
+      <h4>Reduce screen time</h4>
+  </div>
+
+    <div id='avoid_box'>
+      <img src='https://cdn-icons-png.flaticon.com/128/3364/3364982.png'/>
+      <h4>No Drugs and Alcohol</h4>
+    </div>
+
+</div>
+
+
+
+<div class='home_profile'>
+    <h2>check your profile</h2>
+   <div> <a href="{% url 'pda_app:profile'%}"><button><img  src='https://cdn-icons-png.flaticon.com/128/1144/1144709.png' /></button></a></div>
+</div>
+</div>
+
+
+{% endblock %}
+
+
+

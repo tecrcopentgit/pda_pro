@@ -1,0 +1,156 @@
+{% extends 'pda_app/layout.html'%}
+{% load static %}
+
+{% block title %}Medications{% endblock %}
+
+{% block styles %}
+<link rel='stylesheet' href="{% static 'pda_app/css/medicine.css' %}"/>
+<link rel='stylesheet' href="{% static 'pda_app/css/medicine2.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<div class='med_dom'>
+  <h1>Medications</h1>
+  <div class='medication_value'>0</div>
+  <h4>Total Medications</h4>
+  <button id='add_med'>Add Medication</button>
+</div>
+
+<form id="medicationForm" style="display:none;">
+  <fieldset>
+    <legend>Medication Entry</legend>
+    <div class='entry_content'>
+      <label for="medName">Name:</label>
+      <input type="text" id="medName" name="name" required />
+
+      <label for="medDosage">Dosage:</label>
+      <input type="text" id="medDosage" name="dosage" required />
+
+      <label for="medFrequency">Frequency:</label>
+      <select id="medFrequency" name="frequency" required>
+        <option value="">--Select--</option>
+        <option value="Once a day">Once a day</option>
+        <option value="Twice a day">Twice a day</option>
+        <option value="Three times a day">Three times a day</option>
+      </select>
+
+      <label for="medRoute">Route:</label>
+      <select id="medRoute" name="route" required>
+        <option value="">--Select--</option>
+        <option value="Oral">Oral</option>
+        <option value="Injection">Injection</option>
+        <option value="Topical">Topical</option>
+      </select>
+
+      <label for="medValue">Value:</label>
+      <input type="number" id="medValue" name="value" min="1" required />
+
+      <button type="submit">Add Medication</button>
+    </div>
+  </fieldset>
+</form>
+
+<div class="medication_list">
+  <h2>Medications</h2>
+  <ul id="medList"></ul>
+</div>
+
+<script>
+    const form = document.getElementById("medicationForm");
+    const medList = document.getElementById("medList");
+  
+    // ✅ Get token from localStorage (saved during login)
+    const token = localStorage.getItem("token");
+  
+    if (!token) {
+      alert("You must log in first!");
+      window.location.href = "{% url 'pda_app:login' %}";
+    }
+  
+    // ✅ Decode JWT to extract userId
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentUserId = payload.userId; // comes from backend token
+  
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const medData = {
+        user_id: currentUserId,
+        name: document.getElementById("medName").value,
+        dosage: document.getElementById("medDosage").value,
+        frequency: document.getElementById("medFrequency").value,
+        route: document.getElementById("medRoute").value,
+        value: document.getElementById("medValue").value,
+      };
+  
+      await fetch("http://localhost:3001/add-medication", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(medData),
+      });
+  
+      loadMedications();
+    });
+  
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById('add_med').addEventListener('click', function () {
+        if (form.style.display === 'none' || form.style.display === '') {
+          form.style.display = 'block';
+          document.querySelector('.med_dom').style.display = 'none';
+        } else {
+          form.style.display = 'none';
+          document.querySelector('.med_dom').style.display = 'block';
+        }
+      });
+  
+      loadMedications();
+    });
+  
+    async function loadMedications() {
+      const res = await fetch(`http://localhost:3001/medications/${currentUserId}`, {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const meds = await res.json();
+  
+      medList.innerHTML = "";
+  
+      if (meds.length === 0) {
+        const img = document.createElement("img");
+        img.src = "https://media.tenor.com/U-7amjYxmiAAAAAm/roteskreuzburgenland-rotes-kreuz-burgenland.webp";
+        img.alt = "No data available";
+        img.width = 150;
+        medList.appendChild(img);
+        document.querySelector(".medication_value").textContent = "0";
+        return;
+      }
+  
+      meds.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = `${m.id} - ${m.name} (${m.dosage}) - ${m.frequency} via ${m.route} [Value: ${m.value}]`;
+  
+        const delBtn = document.createElement("button");
+        delBtn.innerHTML = '<img src="https://cdn-icons-png.flaticon.com/128/9068/9068779.png" alt="Delete" width="20" height="20"/>';
+  delBtn.style.border = 'none';
+  delBtn.style.background = 'none';
+        delBtn.addEventListener("click", async () => {
+          await fetch(`http://localhost:3001/delete-medication/${m.id}/${currentUserId}`, {
+            method: "DELETE",
+            headers: { "Authorization": "Bearer " + token }
+          });
+          loadMedications();
+        });
+  
+        li.appendChild(delBtn);
+        medList.appendChild(li);
+      });
+  
+      document.querySelector(".medication_value").textContent = meds.length;
+    }
+  </script>
+  
+{% endblock %}
+
+{% block scripts %}{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'pda_app/layout.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'pda_app/css/profile.css' %}" />
+{% endblock %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="user_profile">
+  <h2>User Profile</h2>
+  <div id="profile">Loading profile...</div>
+  <button onclick="logout_move()" class="logout-btn">Logout</button>
+</div>
+<div class='ensure_remove_profile'>
+  <h4>Are you sure to logout your profile?</h4>
+  <button class='yes_btn' onclick="logout()">Yes</button>
+  <button class='no_btn' onclick="cancelDelete()">No</button>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const profileBox = document.getElementById('profile');
+  
+    if (!token) {
+      window.location.href = '{% url "pda_app:login" %}';
+      return;
+    }
+  
+    fetch('http://localhost:3033/profile', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Unauthorized');
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.error) {
+          profileBox.innerText = data.error;
+        } else {
+          profileBox.innerHTML = `
+            <p><strong>Username:</strong> ${data.username || 'N/A'}</p>
+            <p><strong>Email:</strong> ${data.email || 'N/A'}</p>
+          `;
+        }
+      })
+      .catch(err => {
+        profileBox.innerText = 'Error fetching profile';
+        console.error('Profile fetch error:', err);
+      });
+  });
+  function logout_move() {
+    const ensurer = document.querySelector('.ensure_remove_profile');
+    ensurer.style.display = 'block';
+    const profileBox = document.querySelector('.user_profile');
+    profileBox.style.display = 'none';
+  }
+  function cancelDelete() {
+    const profileBox = document.querySelector('.user_profile');
+    const ensurer = document.querySelector('.ensure_remove_profile');
+    ensurer.style.display = 'none';
+    profileBox.style.display = 'block';
+  }
+  function logout() {
+    localStorage.removeItem('token');
+    window.location.href = '{% url "pda_app:login" %}';
+  }
+  </script>
+{% endblock %}

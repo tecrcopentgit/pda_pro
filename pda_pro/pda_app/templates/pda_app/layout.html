@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static%}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{%block title%}My Website{%endblock%}</title>
+  <link rel='icon' href='https://cdn-icons-png.flaticon.com/128/3957/3957598.png' />
+  <link rel="stylesheet" href="{% static 'pda_app/css/over_2.css' %}">
+  <link rel="stylesheet" href="{% static 'pda_app/css/over.css' %}">
+  {% block styles %}{% endblock %}
+  {% block scripts %}{%endblock %}
+
+  <script src="{% static 'pda_app/js/baseScript.js'%}"></script>
+
+</head>
+<body>
+<header class='header_pdapro'>
+<div id='title_section'>
+   <img src='https://cdn-icons-png.flaticon.com/128/3957/3957598.png'/>
+   <h1>Personal Medical Assistance</h1>
+</div>
+<div id='nav_section'>
+    <a href="{% url 'pda_app:home'%}"><button><img src='https://cdn-icons-png.flaticon.com/128/19022/19022462.png'/></button></a>
+    <a href="{% url 'pda_app:report' %}"><button><img src='https://cdn-icons-png.flaticon.com/128/4228/4228724.png'/></button></a>
+    <a href="{% url 'pda_app:prescription'%}"><button><img src='https://cdn-icons-png.flaticon.com/128/3595/3595970.png'/></button></a>
+    <a href="{% url 'pda_app:remainder'%}"><button><img src='https://cdn-icons-png.flaticon.com/128/14731/14731029.png'/></button></a>
+</div>
+<div class='sidenav_pdapro' ><button class='sidenavButton'><img src='https://cdn-icons-png.flaticon.com/128/16734/16734046.png'/></button></div>
+
+  </header>
+  <div  class='sidebar_pdapro' id='sidebar_pdapro'>
+    <div><button class='nav_back'><img src='https://cdn-icons-png.flaticon.com/128/93/93634.png' height='40' width='40' /></button></div>
+    <div id='nav_one'>
+    <ul>
+        <div id='link'><li><a href="{% url 'pda_app:home'%}"><img src='https://cdn-icons-png.flaticon.com/128/19022/19022462.png' heigth='30' width='30'/>Dashboard</a></li></div>
+        <div id='link'><li><a href="{% url 'pda_app:report' %}"><img src='https://cdn-icons-png.flaticon.com/128/4228/4228724.png' height='30' width = '30'/>Reports</a></li></div>
+        <div id='link'><li><a href="{% url 'pda_app:prescription'%}"><img src='https://cdn-icons-png.flaticon.com/128/3595/3595970.png' height='30' width='30'/>Prescriptions</a></li></div>
+        <div id='link'><li><a href="{% url 'pda_app:remainder'%}"><img src='https://cdn-icons-png.flaticon.com/128/14731/14731029.png' height='30' width='30'/>Remainders</a></li></div>
+    </ul>
+  </div>
+  <div id='nav_two'>
+    <ul><div id='link'><li><a href="{% url 'pda_app:register'%}"><img src='https://cdn-icons-png.flaticon.com/128/2921/2921147.png' heigth='30' width='30'/>Register</a></li></div>
+      <div id='link'><li><a href="{% url 'pda_app:login' %}"><img src='https://cdn-icons-png.flaticon.com/128/17506/17506996.png' height='30' width = '30'/>Login</a></li></div>
+    </ul>
+  </div>
+  </div>
+{% block content %}
+
+{% endblock %}
+
+
+  <script>
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      const sideNavButton = document.querySelector('.sidenavButton');
+      const sidebar_section = document.querySelector('.sidebar_pdapro');
+      if (sideNavButton) {
+        sideNavButton.addEventListener('click', () => {
+          sidebar_section.style.display = 'block';
+        });
+      }
+    });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const navBackbutton = document.querySelector('.nav_back');
+      const sidebar_section = document.querySelector('.sidebar_pdapro');
+      if( navBackbutton) {
+        navBackbutton.addEventListener('click', () => {
+          sidebar_section.style.display = 'none';
+        });
+      }
+    });
+    </script>
+    
+</script>
+</body>
+<footer></footer>
+</html>

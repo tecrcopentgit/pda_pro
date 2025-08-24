@@ -1,0 +1,127 @@
+{% extends 'pda_app/layout.html' %}
+{% load static %}
+
+{% block title %}Medical Reports{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'pda_app/css/home.css' %}">
+<link rel="stylesheet" href="{% static 'pda_app/css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="boxcontent_pdapro">
+  <div class="med_report_pdapro">
+    <h1 class="med_report">0</h1>
+    <h4>Medical Reports</h4>
+    <button class="add_test_btn1" onclick="reportFormClick()">Add Report</button>
+    <button class="test_link" data-url="{% url 'pda_app:tests' %}">Go to Tests</button>
+  </div>
+
+  <div class="Report_Form" style="display:none;">
+    <label>Report Form</label><br><br>
+    <form id="reportForm" enctype="multipart/form-data">
+      <label>Report Name</label>
+      <input type="text" id="report_name" placeholder="Report Title" required>
+      <label>Suggested Doctor</label>
+      <input type="text" id="doctor_name" placeholder="Doctor Name" required>
+      <label>Date of Report</label>
+      <input type="date" id="report_date" required>
+      <label>Name of the laboratory</label>
+      <input type="text" id="lab" placeholder="Lab Name" required>
+      <label>Upload the image of the report</label><br>
+      <input type="file" id="report_pdf" accept="application/pdf" required>
+      <button type="submit">Submit Report</button>
+    </form>
+  </div>
+</div>
+
+<div id="reportS_list"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const testLinkButton = document.querySelector('.test_link');
+  testLinkButton.onclick = () => {
+    const url = testLinkButton.dataset.url;
+    window.location.href = url;
+  };
+});
+
+const token = localStorage.getItem('token');
+if (!token) {
+  alert('Login required');
+  window.location.href = "{% url 'pda_app:login' %}";
+}
+
+const payload = JSON.parse(atob(token.split('.')[1]));
+const currentUserId = payload.userId;
+const API_URL = 'http://127.0.0.1:2999';
+
+function reportFormClick() {
+  document.querySelector('.Report_Form').style.display = 'block';
+  document.querySelector('.med_report_pdapro').style.display = 'none';
+}
+
+// ---- Reports ----
+document.getElementById('reportForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append('user_id', currentUserId);
+  formData.append('report_name', document.getElementById('report_name').value);
+  formData.append('doctor_name', document.getElementById('doctor_name').value);
+  formData.append('report_date', document.getElementById('report_date').value);
+  formData.append('lab_name', document.getElementById('lab').value);
+  formData.append('report_pdf', document.getElementById('report_pdf').files[0]);
+
+  await fetch(`${API_URL}/reports`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token },
+    body: formData
+  });
+
+  loadReports();
+  document.getElementById('reportForm').reset();
+  document.querySelector('.Report_Form').style.display = 'none';
+  document.querySelector('.med_report_pdapro').style.display = 'block';
+});
+
+async function loadReports() {
+  const res = await fetch(`${API_URL}/reports/user/${currentUserId}`, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  const reports = await res.json();
+  const list = document.getElementById('reportS_list');
+  list.innerHTML = '';
+
+  reports.forEach(r => {
+    const div = document.createElement('div');
+    div.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    div.style.color = 'white';
+    div.style.margin = '10px';
+    div.style.borderRadius = '10px';
+    div.style.padding = '20px';
+    div.innerHTML = `
+      <h3>${r.report_name}</h3>
+      <p>Suggested Doctor: ${r.doctor_name}</p>
+      <p>Date: ${r.report_date}</p>
+      <p>Lab: ${r.lab_name}</p>
+      ${r.pdf_path ? `<p><a href="${API_URL}/${r.pdf_path}" target="_blank">Open PDF</a></p>` : ''}
+      <button onclick="deleteReport(${r.id})" id='repDeleteButton'>Delete</button>
+    `;
+    list.appendChild(div);
+  });
+  
+  document.querySelector('.med_report').textContent = reports.length;
+}
+
+async function deleteReport(id) {
+  await fetch(`${API_URL}/reports/${id}/user/${currentUserId}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  loadReports();
+}
+
+window.onload = loadReports;
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'pda_app/layout.html' %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'pda_app/css/register.css' %}" />
+<link rel='stylesheet' href="{% static 'pda_app/css/znav.css' %}"/>
+{% endblock %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class='z_navbar'>
+  <a href="{% url 'pda_app:login'%}"><button><img src='https://cdn-icons-png.flaticon.com/128/17506/17506996.png'/></button></a>
+  <a href="{% url 'pda_app:register' %}"><button><img src='https://cdn-icons-png.flaticon.com/128/2921/2921147.png'/></button></a>
+</div>
+<div class="register-container">
+  <h2>Register</h2>
+  <form id="registerForm">
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Register</button>
+  </form>
+  <div id="message"></div>
+
+  <h4>Already have an account? <a href="{% url 'pda_app:login' %}">Login</a></h4>
+</div>
+
+<script>
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value,
+      password: document.getElementById('password').value,
+    };
+
+    try {
+      const res = await fetch('http://localhost:3033/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        document.getElementById('message').innerText = '✅ Registration successful!';
+        setTimeout(() => {
+          window.location.href = "{% url 'pda_app:login' %}";
+        }, 1500);
+      } else {
+        document.getElementById('message').innerText = '❌ ' + (result.error || 'Registration failed');
+      }
+    } catch (err) {
+      document.getElementById('message').innerText = '⚠️ Server error';
+    }
+  });
+</script>
+{% endblock %}

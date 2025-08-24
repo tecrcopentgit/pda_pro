@@ -1,0 +1,71 @@
+.user_profile{
+    width: 90%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position:absolute;
+    top:15%;
+    left: 3%;
+    background-color: rgba(255, 255, 255, 0.532);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.user_profile button{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #4CAF50;
+    color: white;
+}
+
+.ensure_remove_profile{
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    border-radius: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+    background-color: rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    padding: 2%;
+    width: 30%;
+    display: none;
+}
+
+.ensure_remove_profile button{
+    color:aliceblue;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: #4CAF50;
+    color: white;
+}
+
+
+@media (max-width: 1000px){
+
+    .user_profile{
+        width: 60%;
+        top:30%;
+        margin: 30px;
+    }
+
+    .ensure_remove_profile{
+        width: 60%;
+        top:30%;
+        left:50px;
+    }
+}

@@ -1,0 +1,305 @@
+{% extends 'pda_app/layout.html' %}
+{% load static %}
+{% block title %}Medicine Reminder{% endblock %}
+
+{% block styles %}
+<link rel='stylesheet' href="{% static 'pda_app/css/remainder.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="remainder_body">
+
+  <h2>Medicine Reminder</h2>
+  <form id='remainder_form'>
+    <label>Medicine Name:</label>
+    <input type="text" id="medicineName"><br><br>
+
+    <label>Dosage:</label>
+    <input type="number" id="dosage"><br><br>
+
+    <label>Medicine Type:</label>
+    <input type="text" id="medtype"><br><br>
+
+    <label>Time:</label><br>
+    <input type="time" id="reminderTime"><br><br>
+
+    <button type="submit">Add Reminder</button>
+  </form>
+</div>
+
+<div class="remainder_list">
+  <h3>Reminders</h3>
+  <ul id="remainderList"></ul>
+</div>
+
+<script>
+  const form = document.getElementById('remainder_form');
+  const remainder_List = document.getElementById("remainderList");
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("You must log in first!");
+    window.location.href = "{% url 'pda_app:login' %}";
+  }
+
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const currentUserId = payload.userId;
+
+  // Pop-up message function
+  function showPopupMessage(message, type = 'info') {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: ${type === 'reminder' ? '#ff4757' : '#2ecc71'};
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 10000;
+      font-size: 16px;
+      max-width: 300px;
+      animation: slideIn 0.3s ease-out;
+    `;
+    
+    // Add CSS animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    popup.innerHTML = message;
+    document.body.appendChild(popup);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      popup.style.animation = 'slideIn 0.3s ease-out reverse';
+      setTimeout(() => {
+        if (popup.parentNode) {
+          popup.parentNode.removeChild(popup);
+        }
+      }, 300);
+    }, 5000);
+    
+    return popup;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const medData = {
+      user_id: currentUserId,
+      med_name: document.getElementById("medicineName").value,
+      dosage: document.getElementById("dosage").value,
+      med_type: document.getElementById("medtype").value,
+      med_time: document.getElementById("reminderTime").value,
+    };
+
+    try {
+      await fetch("http://localhost:3022/add-remainder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify(medData),
+      });
+      
+      // Clear form after successful submission
+      form.reset();
+      showPopupMessage('✅ Medicine reminder added successfully!', 'success');
+      loadReminders();
+    } catch (error) {
+      console.error('Error adding reminder:', error);
+      alert('Failed to add reminder. Please try again.');
+    }
+  });
+
+  async function loadReminders() {
+    try {
+      const res = await fetch(`http://localhost:3022/remainder/${currentUserId}`, {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const remainder = await res.json();
+      remainder_List.innerHTML = "";
+
+      if (remainder.length === 0) {
+        const img = document.createElement("img");
+        img.src = "https://media.tenor.com/U-7amjYxmiAAAAAm/roteskreuzburgenland-rotes-kreuz-burgenland.webp";
+        img.alt = "No data available";
+        img.width = 150;
+        remainder_List.appendChild(img);
+        return;
+      }
+
+      remainder.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = `Medicine Name: ${m.med_name} | Dosage: ${m.dosage} | Medicine Type: ${m.med_type} | Time to take: ${m.med_time}`;
+
+        const delBtn = document.createElement("button");
+        delBtn.innerHTML = '<img id="rem_button" src="https://cdn-icons-png.flaticon.com/128/9068/9068779.png" alt="Delete" width="20" height="20"/>';
+        delBtn.style.border='none';
+        delBtn.addEventListener("click", async () => {
+          try {
+            await fetch(`http://localhost:3022/delete-remainder/${m.id}/${currentUserId}`, {
+              method: "DELETE",
+              headers: { "Authorization": "Bearer " + token }
+            });
+            showPopupMessage('🗑️ Medicine reminder deleted!', 'success');
+            loadReminders();
+          } catch (error) {
+            console.error('Error deleting reminder:', error);
+            alert('Failed to delete reminder. Please try again.');
+          }
+        });
+
+        li.appendChild(delBtn);
+        remainder_List.appendChild(li);
+      });
+    } catch (error) {
+      console.error('Error loading reminders:', error);
+    }
+  }
+
+  // Enhanced notification function with multiple sound options
+  async function playNotificationSound() {
+    const sounds = [
+      "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg",
+      "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+      "https://www2.cs.uic.edu/~i101/SoundFiles/BellToll1.wav"
+    ];
+    
+    for (let soundUrl of sounds) {
+      try {
+        const audio = new Audio(soundUrl);
+        audio.volume = 0.7; // Set volume to 70%
+        await audio.play();
+        break; // If sound plays successfully, exit loop
+      } catch (err) {
+        console.log(`Failed to play sound ${soundUrl}:`, err);
+        // Try next sound
+      }
+    }
+    
+    // Fallback: create beep sound using Web Audio API if all external sounds fail
+    try {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // 800Hz tone
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 1);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 1);
+    } catch (beepError) {
+      console.log("Fallback beep sound also failed:", beepError);
+    }
+  }
+
+  // Enhanced reminder checking with pop-up messages
+  function checkReminders(reminders) {
+    const now = new Date();
+    const currentTime = now.toTimeString().slice(0,5); // "HH:MM"
+    const currentSeconds = now.getSeconds();
+    
+    // Only check when seconds are 0-5 to avoid multiple triggers
+    if (currentSeconds > 5) return;
+
+    reminders.forEach(rem => {
+      if (rem.med_time === currentTime) {
+        console.log(`Reminder triggered for: ${rem.med_name} at ${currentTime}`);
+        
+        // Show pop-up message
+        showPopupMessage(
+          `💊 <strong>Medicine Time!</strong><br>
+           Take your <strong>${rem.med_name}</strong> (${rem.dosage})<br>
+           Type: ${rem.med_type}`, 
+          'reminder'
+        );
+
+        // Play notification sound
+        playNotificationSound();
+        
+        // Visual feedback in the browser (flash the reminder item)
+        const reminderItems = document.querySelectorAll('#remainderList li');
+        reminderItems.forEach(item => {
+          if (item.textContent.includes(rem.med_name)) {
+            item.style.backgroundColor = '#ffeb3b';
+            item.style.transition = 'background-color 0.5s';
+            setTimeout(() => {
+              item.style.backgroundColor = '';
+            }, 3000);
+          }
+        });
+
+        // Show alert as backup after 2 seconds
+        setTimeout(() => {
+          if (confirm(`💊 Medicine Reminder!\n\nTime to take: ${rem.med_name} (${rem.dosage})\nType: ${rem.med_type}\n\nClick OK to dismiss this reminder.`)) {
+            console.log('User acknowledged the reminder');
+          }
+        }, 2000);
+      }
+    });
+  }
+
+  // Load reminders initially
+  loadReminders();
+
+  // Check reminders every 10 seconds for better accuracy
+  let reminderInterval;
+  
+  function startReminderChecking() {
+    if (reminderInterval) {
+      clearInterval(reminderInterval);
+    }
+    
+    reminderInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`http://localhost:3022/remainder/${currentUserId}`, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const reminders = await res.json();
+        checkReminders(reminders);
+      } catch (error) {
+        console.error('Error checking reminders:', error);
+      }
+    }, 10000); // Check every 10 seconds instead of 60
+  }
+
+  // Start checking reminders
+  startReminderChecking();
+
+  // Handle page visibility change - restart checking when page becomes visible
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      startReminderChecking();
+    }
+  });
+
+  // Handle browser focus - check reminders immediately when window gets focus
+  window.addEventListener('focus', () => {
+    setTimeout(async () => {
+      try {
+        const res = await fetch(`http://localhost:3022/remainder/${currentUserId}`, {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const reminders = await res.json();
+        checkReminders(reminders);
+      } catch (error) {
+        console.error('Error checking reminders on focus:', error);
+      }
+    }, 1000);
+  });
+
+</script>
+{% endblock %}

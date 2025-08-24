@@ -1,0 +1,138 @@
+{% extends 'pda_app/layout.html' %}
+{% load static %}
+
+{% block title %}Medical Tests{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'pda_app/css/test.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="boxcontent_pdapro">
+  <div class="reportHead">
+    <h1 class="med_tests">0</h1>
+    <h4>Medical Tests</h4>
+    <button class="add_test_btn2" onclick="testFormClick()">Add Test</button>
+    <button class='report_link' data-url="{% url 'pda_app:report' %}">Back to reports</button>
+  </div>
+
+  <div class="reportform_pdapro" style="display:none;">
+    <label>Medical Test Form</label><br><br>
+    <form id="testForm">
+      <label>Name of the test</label>
+      <input type="text" id="test_name" placeholder="Test Name" required>
+      <label>Suggested Doctor</label>
+      <input type="text" id="doctor_test" placeholder="Suggested by Dr." required>
+      <label>Test Name</label>
+      <input type="text" id="test_for_person" placeholder="Test for" required>
+      <labe>Label of the Test</label>
+      <input type="date" id="date_test" required>
+      <label>Name of the Laboratory</label>
+      <input type="text" id="lab_test" placeholder="Lab Name" required>
+      <button type="submit">Submit Test</button>
+      
+    </form>
+  </div></div>
+
+  <div id="testList"></div>
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const testLinkButton = document.querySelector('.report_link');
+    testLinkButton.onclick = () => {
+      const url = testLinkButton.dataset.url;
+      window.location.href = url;
+    };
+  });
+
+const token = localStorage.getItem('token');
+if (!token) { alert('Login required'); window.location.href="{% url 'pda_app:login' %}"; }
+
+const payload = JSON.parse(atob(token.split('.')[1]));
+const currentUserId = payload.userId;
+const API_URL = 'http://127.0.0.1:2998';
+
+function testFormClick() {
+  document.querySelector('.reportform_pdapro').style.display = 'block';
+  document.querySelector('.reportHead').style.display = 'none';
+}
+
+// ---- Tests ----
+document.getElementById('testForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const data = {
+    user_id: currentUserId,
+    test_name: document.getElementById('test_name').value,
+    doctor_name: document.getElementById('doctor_test').value,
+    test_for_person: document.getElementById('test_for_person').value,
+    date: document.getElementById('date_test').value,
+    lab_name: document.getElementById('lab_test').value
+  };
+  await fetch(`${API_URL}/tests`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: JSON.stringify(data)
+  });
+  loadTests();
+  document.getElementById('testForm').reset();
+});
+
+async function loadTests() {
+  try {
+    const res = await fetch(`${API_URL}/tests/user/${currentUserId}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    const data = await res.json();
+    console.log('Tests response:', data); // check the structure
+
+    // Adjust according to your API structure
+    const tests = Array.isArray(data) ? data : data.tests || [];
+    
+    const list = document.getElementById('testList');
+    list.innerHTML = '';
+
+    if (tests.length === 0) {
+      list.innerHTML = '<p>No tests available.</p>';
+      document.querySelector('.med_tests').textContent = '0';
+      return;
+    }
+
+    tests.forEach(t => {
+      const div = document.createElement('div');
+      div.style.backgroundColor='rgba(0,2,0,0.8)';
+      div.style.color='white';
+      div.style.borderRadius = '20px';
+      div.style.margin = '10px';
+      div.style.padding='20px';
+      div.innerHTML = `
+        <h3>${t.test_name}</h3>
+        <p>Doctor: ${t.doctor_name}</p>
+        <p>Test for: ${t.test_for_person}</p>
+        <p>Date: ${t.date}</p>
+        <p>Lab: ${t.lab_name}</p>
+        <button class='testButton' onclick="deleteTest(${t.id})">Delete</button>
+      `;
+      list.appendChild(div);
+    });
+
+    document.querySelector('.med_tests').textContent = tests.length;
+  } catch (err) {
+    console.error('Error loading tests:', err);
+  }
+}
+
+
+
+async function deleteTest(id){
+  await fetch(`${API_URL}/tests/${id}/user/${currentUserId}`, {
+    method:'DELETE', headers:{'Authorization':'Bearer '+token}
+  });
+  loadTests();
+}
+
+window.onload = loadTests;
+</script>
+{% endblock %}
