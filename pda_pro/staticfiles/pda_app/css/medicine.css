@@ -1,0 +1,68 @@
+
+#medicationForm{
+    position:absolute;
+    top: 20%;
+    align-content: center;
+    width:40%;
+    justify-self: center;
+    border-radius: 2%;
+    display:none;
+    left: 2%;
+    
+}
+
+.entry_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+}
+.entry_content input{
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.entry_content button{
+    width: 80%;
+    padding: 10px;
+    background-color: #199dd5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 1s ease;
+    margin-left: 10px;
+}
+
+.entry_content button:hover{
+    background-color: #8e19c9;
+}
+
+.entry_content select{
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: white;
+   
+}
+
+@media (max-width:1000px){
+   #medicationForm{
+    width: 90%;
+    top: 30%;
+    left:10px;
+   }
+   .entry_content{
+    width: 80%;
+   }
+}

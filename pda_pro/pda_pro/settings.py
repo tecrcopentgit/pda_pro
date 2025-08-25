@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,13 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a_f(t19_e8n(8h!aav4=)c$s$u-r2g8d1-8mnrzkctc1ll=j3c'
+SECRET_KEY = os.environ.get('SECRET_KEY','django-insecure-a_f(t19_e8n(8h!aav4=)c$s$u-r2g8d1-8mnrzkctc1ll=j3c')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG','True') == 'True'
 
-ALLOWED_HOSTS = []
 
+
+ALLOWED_HOSTS = ['localhost','127.0.0.1','.onrender.com']
+API_BASE_URL = 'http://localhost:3000'
 
 # Application definition
 
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pda_app'
 ]
 
 MIDDLEWARE = [
@@ -48,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'pda_pro.urls'
@@ -120,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 
 STATICFILES_DIRS = [
     BASE_DIR / 'pda_app/static',

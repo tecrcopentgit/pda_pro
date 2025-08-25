@@ -1,0 +1,83 @@
+:root {
+    --color-primary: #38BDF8;
+    --color-accent: #FF6B6B;
+    --color-bg: #F9FAFB;
+    --color-text: #374151;
+    --color-secondary: #4ADE80;
+    --color-muted: #D1D5DB;
+    --color-border: #E5E7EB;
+}  
+
+
+body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: var(--color-secondary);
+
+}   
+
+
+
+.header_pdapro{
+display:flex;
+justify-content:space-between;
+align-items: center;
+background-color: rgba(209, 213, 219, 0.3);
+position:fixed;
+width:100%;
+z-index: 1500;
+
+}
+.header_pdapro img{
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+}
+.header_pdapro button{
+    border:none;
+    border-radius:14%;
+}
+.header_pdapro button:hover{
+    background-color: rgb(169, 241, 169);
+}
+.sidenav_pdapro{
+    display:none;
+}
+#title_section{
+    display:flex;
+    flex-direction:row;
+}
+#pdaApp {
+    text-decoration: none;
+    font-weight: lighter;
+}
+
+@media (max-width: 1000px) {
+    .header_pdapro {
+        flex-direction: column;
+    width:100px;
+        height: 150px;
+        width: 100%;
+        flex-wrap:wrap;
+        z-index: 1500;
+    }
+    .header_pdapro img {
+        width: 40px;
+        height: 40px;
+    }
+    #nav_section{
+        display:none;
+    }
+    .sidenav_pdapro{
+            display:block;
+            position:absolute;
+            right:10px;
+            top:70px;
+            
+        }
+        .sidebar_pdapro{
+            z-index: 1500;
+        }
+    }
