@@ -1,95 +1,105 @@
-altgraph==0.17.4
-anyio==4.9.0
-APScheduler==3.6.3
-asgiref==3.8.1
-asttokens==3.0.0
-attrs==25.3.0
-blinker==1.9.0
-cachetools==4.2.2
-certifi==2025.1.31
-cffi==1.17.1
+# Core Framework
+Django==5.1.6
+
+# WSGI Server for Production
+gunicorn==23.0.0
+
+# PostgreSQL Database Adapter
+psycopg2==2.9.10
+
+# Static File Serving
+whitenoise==6.6.0
+
+# Date and Time Utilities
+python-dateutil==2.9.0.post0
+pytz==2025.2
+tzdata==2025.1
+
+# HTTP Requests
+requests==2.32.3
+
+# URL Parsing and Compatibility
+urllib3==2.3.0
+idna==3.10
 charset-normalizer==3.4.1
-click==8.1.8
-colorama==0.4.6
-comm==0.2.2
-comtypes==1.4.10
+certifi==2025.1.31
+
+# Dependency Management
+sqlparse==0.5.3
+typing_extensions==4.13.2
+packaging==24.2
+
+# Optional: Background Jobs and Scheduling
+APScheduler==3.6.3
+
+# Optional: Caching and Performance
+cachetools==4.2.2
+
+# Optional: Flask (only if you're mixing frameworks)
+# Flask==3.1.0
+# Jinja2==3.1.5
+# Werkzeug==3.1.3
+# itsdangerous==2.2.0
+
+# Optional: Telegram Bot Support
+python-telegram-bot==13.15
+
+# Optional: YouTube Downloader
+yt-dlp==2025.2.19
+pytube==15.0.0
+
+# Optional: WebSocket Support
+websocket-client==1.8.0
+
+# Optional: Task Scheduling and Async Support
+anyio==4.9.0
+asgiref==3.8.1
+sniffio==1.3.1
+httpx==0.28.1
+httpcore==1.0.9
+h11==0.16.0
+
+# Optional: Logging and Signals
+blinker==1.9.0
+
+# Optional: Static Analysis and Debugging
+decorator==5.1.1
+attrs==25.3.0
+pure_eval==0.2.3
+executing==2.2.0
+asttokens==3.0.0
+stack-data==0.6.3
+
+# Optional: Image and Font Handling
+pillow==11.1.0
+fonttools==4.56.0
+matplotlib==3.10.1
 contourpy==1.3.1
 cycler==0.12.1
-debugpy==1.8.12
-decorator==5.1.1
-distlib==0.3.9
-Django==5.1.6
-executing==2.2.0
-filelock==3.17.0
-filetype==1.2.0
-Flask==3.1.0
-fonttools==4.56.0
-gunicorn==23.0.0
-h11==0.16.0
-httpcore==1.0.9
-httpx==0.28.1
-idna==3.10
-ipykernel==6.29.5
-ipython==8.32.0
-itsdangerous==2.2.0
-jedi==0.19.2
-Jinja2==3.1.5
-jupyter_client==8.6.3
-jupyter_core==5.7.2
 kiwisolver==1.4.8
-MarkupSafe==3.0.2
-matplotlib==3.10.1
-matplotlib-inline==0.1.7
-nest-asyncio==1.6.0
-numpy==2.2.3
-outcome==1.3.0.post0
-packaging==24.2
-parso==0.8.4
-pefile==2023.2.7
-pillow==11.1.0
-platformdirs==4.3.6
-prompt_toolkit==3.0.50
-psutil==7.0.0
-psycopg2==2.9.10
-pure_eval==0.2.3
-pycparser==2.22
-Pygments==2.19.1
-pyinstaller==6.13.0
-pyinstaller-hooks-contrib==2025.3
 pyparsing==3.2.1
-PyQt5==5.15.11
-PyQt5-Qt5==5.15.2
-PyQt5_sip==12.17.0
-PySocks==1.7.1
-python-dateutil==2.9.0.post0
-python-telegram-bot==13.15
-pytube==15.0.0
-pytz==2025.2
-pywifi==1.1.12
-pywin32-ctypes==0.2.3
-pyzmq==26.2.1
-requests==2.32.3
-selenium==4.31.0
-setuptools==80.3.0
-six==1.17.0
-sniffio==1.3.1
-sortedcontainers==2.4.0
-sqlparse==0.5.3
-stack-data==0.6.3
-tornado==6.1
-traitlets==5.14.3
-trio==0.30.0
-trio-websocket==0.12.2
-typing_extensions==4.13.2
-tzdata==2025.1
-tzlocal==5.3.1
-urllib3==2.3.0
-virtualenv==20.29.1
-virtualenvwrapper-win==1.2.7
-waitress==3.0.2
+
+# Optional: Terminal UI
+colorama==0.4.6
+prompt_toolkit==3.0.50
 wcwidth==0.2.13
-websocket-client==1.8.0
-Werkzeug==3.1.3
-whitenoise==6.6.0
-wsproto==1.2.0
-yt-dlp==2025.2.19
+
+# Optional: System Utilities
+psutil==7.0.0
+platformdirs==4.3.6
+filelock==3.17.0
+
+# Optional: Virtual Environment Support
+virtualenv==20.29.1
+
+# Optional: Static File Type Detection
+filetype==1.2.0
+
+# Optional: Selenium for Browser Automation
+selenium==4.31.0
+
+# Optional: ZMQ Support
+pyzmq==26.2.1
+
+# Optional: Sorted Containers
+sortedcontainers==2.4.0
