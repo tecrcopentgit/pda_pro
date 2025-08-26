@@ -14,10 +14,13 @@ const app = express();
 
 // ============== MIDDLEWARE ==============
 app.use(cors(({
-  origin:['https://pda-pro-api.onrender.com']
+  origin:'https://pda-pro-api.onrender.com',
+  methods:['GET','POST','PUT','DELETE'],
+  credentials: true
 })));
 app.use(express.json());
 app.use(bodyParser.json());
+app.options('*',cors());
 
 // Serve uploaded PDFs statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
