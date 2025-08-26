@@ -14,7 +14,7 @@ const app = express();
 
 // ============== MIDDLEWARE ==============
 app.use(cors(({
-  origin:['https://pda_app-web.onrender.com']
+  origin:['https://pda-pro-api.onrender.com']
 })));
 app.use(express.json());
 app.use(bodyParser.json());
@@ -23,18 +23,9 @@ app.use(bodyParser.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ============== DATABASE CONNECTIONS ==============
-// PostgreSQL Pool for users (from register.js)
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:haadhi015@localhost:5432/pda_medication_db',
-});
-
-// PostgreSQL Client for medications, reminders, reports
+// PostgreSQL Client for users (changed from pool to client)
 const client = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "pda_medication_db",
-  password: "haadhi015",
-  port: 5432,
+  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:haadhi015@localhost:5432/pda_medication_db',
 });
 
 client.connect()
@@ -75,7 +66,7 @@ const createUsersTable = async () => {
     );
   `;
   try {
-    await pool.query(query);
+    await client.query(query);
     console.log('✅ Users table is ready');
   } catch (err) {
     console.error('Error creating users table:', err.message);
@@ -169,7 +160,7 @@ app.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
   try {
     const hashed = await bcrypt.hash(password, 10);
-    await pool.query(
+    await client.query(
       'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)',
       [username, email, hashed]
     );
@@ -183,7 +174,7 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = result.rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -205,7 +196,7 @@ app.post('/login', async (req, res) => {
 // Profile (protected)
 app.get('/profile', authenticateToken, async (req, res) => {
   try {
-    const result = await pool.query(
+    const result = await client.query(
       'SELECT username, email FROM users WHERE id = $1',
       [req.user.userId]
     );
@@ -467,8 +458,7 @@ process.on('SIGINT', async () => {
   console.log('\n🛑 Shutting down server...');
   try {
     await client.end();
-    await pool.end();
-    console.log('✅ Database connections closed');
+    console.log('✅ Database connection closed');
     process.exit(0);
   } catch (err) {
     console.error('❌ Error during shutdown:', err);
