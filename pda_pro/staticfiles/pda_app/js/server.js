@@ -14,8 +14,8 @@ const app = express();
 
 // ============== MIDDLEWARE ==============
 app.use(cors(({
-  origin:'https://pda-pro-api.onrender.com',
-  methods:['GET','POST','PUT','DELETE'],
+  origin: 'https://pda-med-api.onrender.com', // ✅ allow your frontend origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 })));
 app.use(express.json());
