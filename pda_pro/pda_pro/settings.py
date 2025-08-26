@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -83,8 +84,13 @@ LOGOUT_REDIRECT_URL = 'pda_app:login'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': "django.db.backends.postgresql",
+        "NAME" : "pda_medication_db",
+        "USER" : "postgres",
+        "PASSWORD":"haadhi015",
+        "HOST":"localhost",
+        "PORT":"5432",
+
     }
 }
 
