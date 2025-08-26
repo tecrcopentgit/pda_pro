@@ -20,7 +20,6 @@ app.use(cors(({
 })));
 app.use(express.json());
 app.use(bodyParser.json());
-app.options('*',cors());
 
 // Serve uploaded PDFs statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -28,7 +27,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // ============== DATABASE CONNECTIONS ==============
 // PostgreSQL Client for users (changed from pool to client)
 const client = new Client({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:haadhi015@localhost:5432/pda_medication_db',
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' 
+    ? { rejectUnauthorized: false }  // ✅ For Render/production
+    : false                          // ✅ For localhost
 });
 
 client.connect()
