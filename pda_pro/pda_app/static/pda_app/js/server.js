@@ -14,7 +14,7 @@ const app = express();
 
 // ============== MIDDLEWARE ==============
 app.use(cors(({
-  origin:['https://pda_app-web.onrender.com']
+  origin:['https://pda-pro-api.onrender.com']
 })));
 app.use(express.json());
 app.use(bodyParser.json());
