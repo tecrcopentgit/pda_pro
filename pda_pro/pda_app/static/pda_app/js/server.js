@@ -20,7 +20,6 @@ app.use(cors(({
 })));
 app.use(express.json());
 app.use(bodyParser.json());
-app.options('*',cors());
 
 // Serve uploaded PDFs statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
