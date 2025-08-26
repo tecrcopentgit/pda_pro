@@ -13,11 +13,21 @@ require('dotenv').config();
 const app = express();
 
 // ============== MIDDLEWARE ==============
-app.use(cors(({
-  origin: 'https://pda-med-api.onrender.com', // ✅ allow your frontend origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+const allowedOrigins = [
+  'https://pda-med-api.onrender.com',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
-})));
+}));
 app.use(express.json());
 app.use(bodyParser.json());
 
