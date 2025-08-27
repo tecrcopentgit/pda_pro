@@ -26,45 +26,47 @@
 </div>
 <script>
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      console.log('attemping to submit');
-      const data = {
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value,
-      };
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('attempting to submit');
   
-      try {
-        const res = await fetch('https://pda-pro-api.onrender.com/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        });
+        const data = {
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+        };
   
-        const result = await res.json();
+        try {
+          const res = await fetch('https://pda-pro-api.onrender.com/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
   
-        if (res.ok) {
-          // ✅ store the token
-          localStorage.setItem('token', result.token);
+          const result = await res.json();
   
-          // ✅ decode the token AFTER storing it
-          const payload = JSON.parse(atob(result.token.split('.')[1]));
-          const currentUserId = payload.userId;
+          if (res.ok) {
+            localStorage.setItem('token', result.token);
   
-          console.log("Logged in User ID:", currentUserId);
-          const homeUrl = "{% url 'pda_app:home' %}";
-          // ✅ redirect user
-          window.location.href = homeUrl;
-        } else {
-          document.getElementById('message').innerText = result.message || result.error;
+            const payload = JSON.parse(atob(result.token.split('.')[1]));
+            const currentUserId = payload.userId;
+  
+            console.log("Logged in User ID:", currentUserId);
+  
+            // Replace this with a hardcoded path or injected URL
+            window.location.href = "/home/";
+          } else {
+            document.getElementById('message').innerText = result.message || result.error;
+          }
+        } catch (err) {
+          console.error("Fetch failed:", err);
+          document.getElementById('message').innerText = '⚠️ Server error';
         }
-      } catch (err) {
-        document.getElementById('message').innerText = '⚠️ Server error';
-        console.error("Fetch failed:", err);
-      }
+      });
     });
   </script>
-  
+
   
 
 {%endblock%}
