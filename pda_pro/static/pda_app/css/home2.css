@@ -1,0 +1,137 @@
+
+.home_main{
+    position: absolute;
+z-index: 2;
+    height: 100%;
+    width: 100%;
+
+}
+
+.maincontents_pdapro{
+    position: absolute;
+    top:30%;
+    right:50%;
+    display:flex;
+    flex-wrap:wrap;
+    width:100%;
+    justify-content: center;
+    width:50%;
+    margin-left:24%;
+    
+
+}.boxcontent_pdapro{
+    flex-direction: column;
+    background-color:rgba(245, 245, 245, 0.75);
+    margin: 10px;
+    justify-items: center;;
+    width:75%;
+    border-radius:2px;
+}
+
+.health_tip{
+    position:absolute;
+    top: 30%;
+    
+    left:45%;
+    background-color: hsla(0, 0%, 100%, 0.35);
+    border-radius: 1%;
+    width: 50%;
+    justify-items:center;
+    
+    
+}
+
+.health_tip img{
+    width: 50px;
+    height: 50px;
+    
+}
+
+#tip_box{
+    flex-wrap:wrap;
+    justify-content: space-between;
+    margin: 4%;
+}
+
+.avoid_tip{
+    position:absolute;
+    top:95%;
+    left:10%;
+    background-color:rgba(255, 0, 0, 0.35);
+    border-radius:5%;
+    padding:2%;
+    flex-wrap:wrap;
+    height: auto;
+    width: 20%;
+    display:flex;
+    flex-direction: row;
+
+
+}
+#avoid_box{
+
+    margin: 15px;
+    width:40%;
+    
+    
+    border-radius:2px;
+}
+@media (max-width: 1000px) {
+
+
+    .maincontents_pdapro {
+        width: 90%;
+    position:absolute;
+       left:1px;
+       top:30%;
+        align-items: center;
+        
+        margin-left:30px;
+
+        
+    }
+    .boxcontent_pdapro{
+    
+    }
+    .health_tip{
+        top:100%;
+        width: 100%;
+        left:10px;
+        
+    }
+     
+    .avoid_box{
+        
+        align-content: center;
+        display:flex;
+        flex-wrap:wrap;
+        width: 20px;
+        height: 20px;
+
+        }
+
+    .avoid_tip{
+        top: 270%;
+        width: 100%;
+left:5px;
+        justify-content: center;
+        height: 300px;
+        
+        
+        
+    }
+    
+
+    .avoid_tip img{
+        height: 30px;
+        width: 30px;
+        
+    }
+
+    .home_profile{
+        top:330%;
+        width:100%;
+        left:10px;
+        
+    }
+}

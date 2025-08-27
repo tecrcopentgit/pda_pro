@@ -1,0 +1,32 @@
+.z_navbar{
+    z-index: 1000;
+    position:fixed;
+
+    right: 0%;
+}
+
+.z_navbar img{
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    border:none;
+}
+
+.z_navbar button{
+    background: none;
+    border:none;
+    margin:10px;
+}
+#nav_section{
+    display:none;
+  }
+
+@media (max-width: 1000px) {
+.z_navbar{
+    display:none;
+}
+.sidebar_pdapro #nav_one{
+    display:none;
+}
+
+}

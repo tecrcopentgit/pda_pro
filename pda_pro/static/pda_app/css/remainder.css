@@ -1,0 +1,66 @@
+.remainder_body {
+    padding: 20px;
+    background-color: #e8d5d5;
+    border-radius: 10px;
+    position: absolute;
+    top: 15%;
+    left: 5%;
+    width: 30%;
+    padding:2%;
+
+  }
+  .remainder_body input, .remainder_body button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    border:none;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .remainder_body button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  .remainder_list {
+    position: absolute;
+    top: 15%;
+    left: 40%;
+    width: 50%;
+    background-color: #eee;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .remainder_list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  .remainder_list li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  #rem_button{
+    border:none;
+    background:none;
+  }
+
+  @media (max-width:1000px){
+    .remainder_body{
+      width:100%;
+      top:40%;
+    }
+
+    .remainder_body input, .remainder_body button{
+      width:80%;
+      align-items: center;
+    }
+
+    .remainder_list{
+      top: 140%;
+      left:0px;
+      width: 100%;
+    }
+  }

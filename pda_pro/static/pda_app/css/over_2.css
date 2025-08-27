@@ -1,0 +1,37 @@
+.sidebar_pdapro{
+    font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    position:fixed;
+    background-color: hsla(0, 0%, 100%, 0.9);
+    right:0%;
+    padding:2%;
+    line-height: 1.8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index:1000;
+    display:none;
+    
+    
+}
+
+.nav_back {
+    border:none;
+    background:none;
+}
+
+
+
+.sidebar_pdapro ul,a{
+    text-decoration:none;
+    list-style: none;
+    font-weight: 900;
+    color:black;
+    padding:10px;
+    height: 600px;
+    
+}
+
+#link{
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top:1px;
+}
