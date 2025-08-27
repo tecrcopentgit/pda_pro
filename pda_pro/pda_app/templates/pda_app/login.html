@@ -52,9 +52,9 @@
           const currentUserId = payload.userId;
   
           console.log("Logged in User ID:", currentUserId);
-  
+          const homeUrl = "{% url 'pda_app:home' %}";
           // ✅ redirect user
-          window.location.href = "{% url 'pda_app:home' %}";
+          window.location.href = homeUrl;
         } else {
           document.getElementById('message').innerText = result.message || result.error;
         }
