@@ -37,7 +37,7 @@
     };
 
     try {
-      const res = await fetch('https://pda-med-api.onrender.com/register', {
+      const res = await fetch('https://pda-pro-api.onrender.com/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -55,6 +55,7 @@
       }
     } catch (err) {
       document.getElementById('message').innerText = 'Server error';
+      
     }
   });
 </script>
