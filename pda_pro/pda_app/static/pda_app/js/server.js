@@ -15,7 +15,8 @@ const app = express();
 // ============== MIDDLEWARE ==============
 const allowedOrigins = [
   'https://pda-med-api.onrender.com',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://pda-pro-api.onrender.com'
 ];
 
 app.use(cors({
@@ -33,6 +34,7 @@ app.use(bodyParser.json());
 
 // Serve uploaded PDFs statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+console.log('connecting to db');
 
 // ============== DATABASE CONNECTIONS ==============
 // PostgreSQL Client for users (changed from pool to client)
