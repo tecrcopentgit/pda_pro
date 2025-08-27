@@ -20,7 +20,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin:allowedOrigins,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(express.json());
@@ -191,6 +197,8 @@ app.post('/login', async (req, res) => {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    res.json({ message: 'Login successful' });
 
     const token = jwt.sign(
       { userId: user.id, email: user.email, username: user.username },
