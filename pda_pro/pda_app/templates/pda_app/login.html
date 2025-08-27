@@ -55,7 +55,7 @@
             console.log("Logged in User ID:", currentUserId);
   
             // Replace this with a hardcoded path or injected URL
-            window.location.href = "{% url 'pda_app:home' %}";
+            window.location.href = "/home";
           } else {
             document.getElementById('message').innerText = result.message || result.error;
           }
