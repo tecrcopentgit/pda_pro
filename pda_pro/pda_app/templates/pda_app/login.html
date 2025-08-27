@@ -28,6 +28,7 @@
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.log('attemping to submit');
       const data = {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
