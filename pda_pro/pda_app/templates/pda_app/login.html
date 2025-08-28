@@ -56,7 +56,7 @@
             console.log("trying to redirect home");
 
             // Replace this with a hardcoded path or injected URL
-            window.location.href = "{% url 'pda_app:report' %}";
+            window.location.href = "/home";
             
           } else {
             document.getElementById('message').innerText = result.message || result.error;
