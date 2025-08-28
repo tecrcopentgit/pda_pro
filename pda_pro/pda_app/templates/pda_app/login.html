@@ -54,9 +54,9 @@
             console.log("Logged in User ID:", currentUserId);
 
             console.log("trying to redirect home");
-  
+  const home_url = '{% url "pda_app:home" %}';
             // Replace this with a hardcoded path or injected URL
-            window.location.href = '{% url "pda_app:home" %}';
+            window.location.href = home_url;
             
           } else {
             document.getElementById('message').innerText = result.message || result.error;
