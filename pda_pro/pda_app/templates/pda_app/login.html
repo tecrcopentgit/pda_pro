@@ -56,7 +56,7 @@
 
 
   console.log("attempting to login");
-          if (res.ok && result.token) {
+          if (result.token) {
             localStorage.setItem('token', result.token);
   
             const payload = JSON.parse(atob(result.token.split('.')[1]));
