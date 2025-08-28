@@ -52,7 +52,7 @@ if (!token) { alert('Login required'); window.location.href="{% url 'pda_app:log
 
 const payload = JSON.parse(atob(token.split('.')[1]));
 const currentUserId = payload.userId;
-const API_URL = 'http://127.0.0.1:3000';
+const API_URL = 'https://pda-pro-api.onrender.com';
 
 function testFormClick() {
   document.querySelector('.reportform_pdapro').style.display = 'block';
