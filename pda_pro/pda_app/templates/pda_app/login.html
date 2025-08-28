@@ -52,9 +52,12 @@
             const currentUserId = payload.userId;
   
             console.log("Logged in User ID:", currentUserId);
+
+            console.log("trying to redirect home");
   
             // Replace this with a hardcoded path or injected URL
-            window.location.href = "/home";
+            window.location.href = "{% url 'pda_app:home' %}";
+            
           } else {
             document.getElementById('message').innerText = result.message || result.error;
           }
