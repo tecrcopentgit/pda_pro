@@ -3,7 +3,7 @@ from . import views
 app_name = 'pda_app'
 
 urlpatterns = [
-path('home', views.home, name='home'),
+path('home/', views.home, name='home'),
 path('', views.login_view, name='login'),
 path('register/', views.register_view, name='register'),
 path('report/',views.report,name='report'),
