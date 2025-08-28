@@ -16,7 +16,7 @@ const app = express();
 const allowedOrigins = [
   'https://pda-med-api.onrender.com',
   'http://localhost:3000',
-  'https://pda-pro-api.onrender.com'
+  'http:// localhost:8000',
 ];
 
 app.use(cors({
