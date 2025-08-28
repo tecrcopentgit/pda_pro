@@ -43,8 +43,18 @@
             credentials:'include',
             body: JSON.stringify(data),
           });
-  
-          const result = await res.json();
+  console.log(res.status);
+  let result;
+  try{
+          result = await res.json();
+          console.log(result);
+  }catch(jsonErr){
+    console.error(jsonErr);
+    document.getElementById('message').innerText = '⚠️ Unexpected server response';
+        return;
+      }
+
+
   console.log("attempting to login");
           if (res.ok && result.token) {
             localStorage.setItem('token', result.token);
@@ -56,12 +66,12 @@
 
             console.log("trying to redirect home");
 
-            // Replace this with a hardcoded path or injected URL
+          
             window.location.href = "/home";
             
           } else {
             document.getElementById('message').innerText = result.message || result.error;
-            window.location.href = "/home";
+            
           }
         } catch (err) {
           console.error("Fetch failed:", err);
