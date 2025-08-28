@@ -446,7 +446,7 @@ app.get('/health', (req, res) => {
 // ============== START SERVER ==============
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,'0.0.0.0', () => {
-  console.log(`\n🚀 Unified Server running at http://localhost:${PORT}`);
+  console.log(`\n🚀 Unified Server running at ${PORT}`);
   console.log('\n📋 Available Endpoints:');
   console.log('   ➜ Authentication:');
   console.log('     POST   /register');
