@@ -48,7 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
       const result = await res.json();
       console.log("Response JSON:", result);
-        
+      console.log("Response status:", res.status);
+      console.log("Response ok?", res.ok);
+      console.log("Response body:", result);
 
       if (res.ok && result.token) {
        
@@ -56,11 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const payload = JSON.parse(atob(result.token.split('.')[1]));
           const currentUserId = payload.userId;
           console.log("Logged in User ID:", currentUserId);
-          document.getElementById('message').innerText = "✅ Login successful!";
+          document.getElementById('message').innerText = "✅Login successful!";
           window.location.href = "{% url 'pda_app:home' %}";
         } 
       else{
-        document.getElementById('message').innerText = result.message || result.error || "⚠️ Login failed";
+        document.getElementById('message').innerText = result.message || result.error || " Login failed";
+        console.log(document.getElementById('message').innerText = result.message || result.error || " Login failed";)
       }
     } catch (err) {
       console.error("Fetch error:", err);
