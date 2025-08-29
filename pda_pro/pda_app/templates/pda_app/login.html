@@ -56,18 +56,22 @@
 
 
   console.log("attempting to login");
-          if (result.token) {
+          if (res.ok && result.token) {
+            console.log("trying to redirect home");
+            window.location.href = "/home";
+            try{
             localStorage.setItem('token', result.token);
   
             const payload = JSON.parse(atob(result.token.split('.')[1]));
             const currentUserId = payload.userId;
-  
             console.log("Logged in User ID:", currentUserId);
-
-            console.log("trying to redirect home");
-
-          
-            window.location.href = "/home";
+            }
+            catch (err){
+              console.log(err);
+              document.getElementById('message').innerText = "invalid token";
+              return;
+            }
+           
             
           } else {
             document.getElementById('message').innerText = result.message || result.error;
