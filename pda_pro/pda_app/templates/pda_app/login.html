@@ -44,30 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       console.log("Response status:", res.status);
-      let result;
-      try {
-        result = await res.json();
-        console.log("Response JSON:", result);
-      } catch (jsonErr) {
-        console.error("JSON parse error:", jsonErr);
-        document.getElementById('message').innerText = '⚠️ Unexpected server response';
-        return;
-      }
+      
+    
+      const result = await res.json();
+      console.log("Response JSON:", result);
+        
 
       if (res.ok && result.token) {
-        try {
+       
           localStorage.setItem('token', result.token);
           const payload = JSON.parse(atob(result.token.split('.')[1]));
           const currentUserId = payload.userId;
           console.log("Logged in User ID:", currentUserId);
-
           document.getElementById('message').innerText = "✅ Login successful!";
           window.location.href = "{% url 'pda_app:home' %}";
-        } catch (err) {
-          console.error("Token decode error:", err);
-          document.getElementById('message').innerText = "⚠️ Invalid token";
-        }
-      } else {
+        } 
+      else{
         document.getElementById('message').innerText = result.message || result.error || "⚠️ Login failed";
       }
     } catch (err) {
