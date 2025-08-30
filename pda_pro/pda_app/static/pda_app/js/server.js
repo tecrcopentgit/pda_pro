@@ -452,29 +452,36 @@ app.delete('/reports/:id/user/:user_id', authenticate, async (req, res) => {
   }
 });
 
-app.post('/tests', async (req, res) => {
+// Fixed POST /tests route
+app.post('/tests', authenticate, async (req, res) => {
   try {
     console.log('Body:', req.body);
-   
 
-    const { user_id, test_name, doctor_name, test_date,test_for_person, lab_name } = req.body;
-    
+    const { user_id, test_name, doctor_name, test_date, test_for_person, lab_name } = req.body;
+
+    // Validate required fields
+    if (!user_id || !test_name || !doctor_name || !test_date || !test_for_person || !lab_name) {
+      return res.status(400).json({ 
+        error: 'Missing required fields',
+        required: ['user_id', 'test_name', 'doctor_name', 'test_date', 'test_for_person', 'lab_name']
+      });
+    }
 
     const result = await client.query(
       `INSERT INTO tests 
-       (user_id, test_name, doctor_name, test_date,test_for_person, lab_name) 
-       VALUES ($1,$2,$3,$4,$5) RETURNING *`,
-      [user_id, test_name, doctor_name, test_date,test_for_person, lab_name]
+       (user_id, test_name, doctor_name, test_date, test_for_person, lab_name) 
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [user_id, test_name, doctor_name, test_date, test_for_person, lab_name]
     );
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Error creating test table:', err);
-    res.status(500).json({ error: 'Failed to create test table' });
+    console.error('Error creating test:', err);
+    res.status(500).json({ error: 'Failed to create test', details: err.message });
   }
 });
 
-// READ reports for a user
+// Fixed GET /tests/user/:user_id route
 app.get('/tests/user/:user_id', authenticate, async (req, res) => {
   try {
     const { user_id } = req.params;
@@ -485,27 +492,33 @@ app.get('/tests/user/:user_id', authenticate, async (req, res) => {
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching tests:', err);
-    res.status(500).json({ error: 'Failed to fetch tests' });
+    res.status(500).json({ error: 'Failed to fetch tests', details: err.message });
   }
 });
 
-
+// Fixed DELETE /tests/:id/user/:user_id route
 app.delete('/tests/:id/user/:user_id', authenticate, async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id, user_id } = req.params;
 
-    
-    
-    
-    await client.query('DELETE FROM tests WHERE id=$1', [id]);
-    res.json({ success: true });
+    // Verify the test belongs to the user before deleting
+    const result = await client.query(
+      'DELETE FROM tests WHERE id=$1 AND user_id=$2 RETURNING *',
+      [id, user_id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Test not found or does not belong to user' });
+    }
+
+    res.json({ success: true, message: 'Test deleted successfully' });
   } catch (err) {
     console.error('Error deleting test:', err);
-    res.status(500).json({ error: 'Failed to delete test' });
+    res.status(500).json({ error: 'Failed to delete test', details: err.message });
   }
 });
 
-// ============== TEST ROUTE ==============
+
 app.get('/test', (req, res) => {
   res.json({ 
     message: 'Unified server is working!', 
