@@ -453,13 +453,13 @@ app.delete('/reports/:id/user/:user_id', authenticate, async (req, res) => {
 });
 
 // Fixed POST /tests route
-app.post('/tests', authenticate, async (req, res) => {
+app.post('/tests', async (req, res) => {
   try {
     console.log('Body:', req.body);
 
     const { user_id, test_name, doctor_name, test_date, test_for_person, lab_name } = req.body;
 
-    // Validate required fields
+    
     if (!user_id || !test_name || !doctor_name || !test_date || !test_for_person || !lab_name) {
       return res.status(400).json({ 
         error: 'Missing required fields',
@@ -481,7 +481,6 @@ app.post('/tests', authenticate, async (req, res) => {
   }
 });
 
-// Fixed GET /tests/user/:user_id route
 app.get('/tests/user/:user_id', authenticate, async (req, res) => {
   try {
     const { user_id } = req.params;
