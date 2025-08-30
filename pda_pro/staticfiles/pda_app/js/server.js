@@ -199,14 +199,14 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Generate token
+    // Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email, username: user.username },
       process.env.JWT_SECRET || 'default_secret_key',
       { expiresIn: '1h' }
     );
 
-    // ✅ Send only one response
+    // ✅ Send a single response
     return res.status(200).json({
       message: 'Login successful',
       token
