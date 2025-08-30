@@ -188,6 +188,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login
+// Login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -198,23 +199,27 @@ app.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    res.json({ message: 'Login successful' });
-
+    // Generate token
     const token = jwt.sign(
       { userId: user.id, email: user.email, username: user.username },
       process.env.JWT_SECRET || 'default_secret_key',
       { expiresIn: '1h' }
     );
 
-    return res.status(200).json({ token });
+    // ✅ Send only one response
+    return res.status(200).json({
+      message: 'Login successful',
+      token
+    });
+
   } catch (err) {
     console.error("Login error:", err);
     if (!res.headersSent) {
       return res.status(500).json({ error: 'Login failed', details: err.message });
     }
-    
   }
 });
+
 
 // Profile (protected)
 app.get('/profile', authenticateToken, async (req, res) => {
