@@ -455,7 +455,7 @@ app.delete('/reports/:id/user/:user_id', authenticate, async (req, res) => {
 app.post('/tests', async (req, res) => {
   try {
     console.log('Body:', req.body);
-    console.log('File:', req.file);
+   
 
     const { user_id, test_name, doctor_name, test_date,test_for_person, lab_name } = req.body;
     
