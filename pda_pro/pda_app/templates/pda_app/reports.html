@@ -54,7 +54,7 @@ if (!token) {
 
 const payload = JSON.parse(atob(token.split('.')[1]));
 const currentUserId = payload.userId;
-const API_URL = 'http://127.0.0.1:3000';
+const API_URL = 'https://pda-pro-api.onrender.com';
 
 function reportFormClick() {
   document.querySelector('.Report_Form').style.display = 'block';

@@ -83,7 +83,7 @@
         value: document.getElementById("medValue").value,
       };
   
-      await fetch("http://localhost:3000/add-medication", {
+      await fetch("https://pda-pro-api.onrender.com/add-medication", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -110,7 +110,7 @@
     });
   
     async function loadMedications() {
-      const res = await fetch(`http://localhost:3000/medications/${currentUserId}`, {
+      const res = await fetch(`https://pda-pro-api.onrender.com/medications/${currentUserId}`, {
         headers: { "Authorization": "Bearer " + token }
       });
       const meds = await res.json();
@@ -136,7 +136,7 @@
   delBtn.style.border = 'none';
   delBtn.style.background = 'none';
         delBtn.addEventListener("click", async () => {
-          await fetch(`http://localhost:3000/delete-medication/${m.id}/${currentUserId}`, {
+          await fetch(`https://pda-pro-api.onrender.com/delete-medication/${m.id}/${currentUserId}`, {
             method: "DELETE",
             headers: { "Authorization": "Bearer " + token }
           });

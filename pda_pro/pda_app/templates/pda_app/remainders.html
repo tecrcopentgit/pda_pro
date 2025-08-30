@@ -101,7 +101,7 @@
     };
 
     try {
-      await fetch("http://localhost:3000/add-remainder", {
+      await fetch("https://pda-pro-api.onrender.com/add-remainder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,7 +122,7 @@
 
   async function loadReminders() {
     try {
-      const res = await fetch(`http://localhost:3000/remainder/${currentUserId}`, {
+      const res = await fetch(`https://pda-pro-api.onrender.com/remainder/${currentUserId}`, {
         headers: { "Authorization": "Bearer " + token }
       });
       const remainder = await res.json();
@@ -146,7 +146,7 @@
         delBtn.style.border='none';
         delBtn.addEventListener("click", async () => {
           try {
-            await fetch(`http://localhost:3000/delete-remainder/${m.id}/${currentUserId}`, {
+            await fetch(`https://pda-pro-api.onrender.com/delete-remainder/${m.id}/${currentUserId}`, {
               method: "DELETE",
               headers: { "Authorization": "Bearer " + token }
             });
@@ -265,7 +265,7 @@
     
     reminderInterval = setInterval(async () => {
       try {
-        const res = await fetch(`http://localhost:3000/remainder/${currentUserId}`, {
+        const res = await fetch(`https://pda-pro-api.onrender.com/remainder/${currentUserId}`, {
           headers: { "Authorization": "Bearer " + token }
         });
         const reminders = await res.json();
@@ -290,7 +290,7 @@
   window.addEventListener('focus', () => {
     setTimeout(async () => {
       try {
-        const res = await fetch(`http://localhost:3000/remainder/${currentUserId}`, {
+        const res = await fetch(`https://pda-pro-api.onrender.com/remainder/${currentUserId}`, {
           headers: { "Authorization": "Bearer " + token }
         });
         const reminders = await res.json();
