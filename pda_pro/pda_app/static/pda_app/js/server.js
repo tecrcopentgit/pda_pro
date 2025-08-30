@@ -41,16 +41,15 @@ console.log('connecting to db');
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' 
-    ? { rejectUnauthorized: false }  // ✅ For Render/production
-    : false                          // ✅ For localhost
+    ? { rejectUnauthorized: false }  
+    : false                          
 });
 
 client.connect()
-  .then(() => console.log("✅ Connected to PostgreSQL"))
-  .catch(err => console.error("❌ Connection error:", err.message));
+  .then(() => console.log("Connected to PostgreSQL...."))
+  .catch(err => console.error("Connection error: ", err.message));
 
-// ============== FILE UPLOAD SETUP ==============
-// Ensure uploads folder exists
+
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
@@ -239,7 +238,7 @@ app.get("/medications/:user_id", async (req, res) => {
     );
     res.json(result.rows);
   } catch (err) {
-    console.error("❌ Fetch error:", err.message);
+    console.error(" Fetch error: ", err.message);
     res.status(500).json({ error: "Database error" });
   }
 });

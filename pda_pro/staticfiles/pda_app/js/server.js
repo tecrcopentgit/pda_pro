@@ -206,9 +206,13 @@ app.post('/login', async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.json({ token });
+    return res.status(200).json({ token });
   } catch (err) {
-    res.status(500).json({ error: 'Login failed', details: err.message });
+    console.error("Login error:", err);
+    if (!res.headersSent) {
+      return res.status(500).json({ error: 'Login failed', details: err.message });
+    }
+    
   }
 });
 
