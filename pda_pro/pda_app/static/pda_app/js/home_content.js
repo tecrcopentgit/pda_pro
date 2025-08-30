@@ -5,14 +5,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const medreportVal = document.querySelector(".med_report");
   const medtestVal = document.querySelector(".med_tests");
 
-  // Get current user from token
+  
   const token = localStorage.getItem('token');
   if (!token) return console.error("No token found");
 
   const payload = JSON.parse(atob(token.split('.')[1]));
   const currentUserId = payload.userId;
 
-  // Fetch medication count dynamically
+  
   try {
     const response = await fetch(`https://pda-pro-api.onrender.com/medications/${currentUserId}`, {
       headers: {

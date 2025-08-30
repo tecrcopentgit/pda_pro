@@ -5,16 +5,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   const medreportVal = document.querySelector(".med_report");
   const medtestVal = document.querySelector(".med_tests");
 
-  // Get current user from token
+  
   const token = localStorage.getItem('token');
   if (!token) return console.error("No token found");
 
   const payload = JSON.parse(atob(token.split('.')[1]));
   const currentUserId = payload.userId;
 
-  // Fetch medication count dynamically
+  
   try {
-    const response = await fetch(`http://localhost:3000/medications/${currentUserId}`, {
+    const response = await fetch(`https://pda-pro-api.onrender.com/medications/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -23,11 +23,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     medicationVal.textContent = medications.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+  
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/reports/user/${currentUserId}`, {
+    const response = await fetch(`https://pda-pro-api.onrender.com/reports/user/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -36,12 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     medreportVal.textContent = s_reports.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+    
   }
 
 
   try {
-    const response = await fetch(`http://localhost:3000/tests/user/${currentUserId}`, {
+    const response = await fetch(`https://pda-pro-api.onrender.com/tests/user/${currentUserId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -50,6 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     medtestVal.textContent = s_reports.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+    
   }
 });
