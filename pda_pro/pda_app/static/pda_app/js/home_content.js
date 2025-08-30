@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     medicationVal.textContent = medications.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+  
   }
 
   try {
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     medreportVal.textContent = s_reports.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+    
   }
 
 
@@ -50,6 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     medtestVal.textContent = s_reports.length;
   } catch (err) {
     console.error("Error fetching medications:", err);
-    // fallback
+    
   }
 });

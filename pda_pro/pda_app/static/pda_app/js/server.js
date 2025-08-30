@@ -70,8 +70,7 @@ const upload = multer({
   }
 });
 
-// ============== DATABASE TABLE CREATION ==============
-// Create users table
+
 const createUsersTable = async () => {
   const query = `
     CREATE TABLE IF NOT EXISTS users (
@@ -89,7 +88,7 @@ const createUsersTable = async () => {
   }
 };
 
-// Create medications table
+
 const createMedicationsTable = async () => {
   await client.query(`
     CREATE TABLE IF NOT EXISTS medications (
@@ -105,7 +104,7 @@ const createMedicationsTable = async () => {
   console.log('✅ Medications table is ready');
 };
 
-// Create remainder table
+
 const createRemainderTable = async () => {
   await client.query(`
     CREATE TABLE IF NOT EXISTS remainder (
@@ -120,7 +119,7 @@ const createRemainderTable = async () => {
   console.log('✅ Remainder table is ready');
 };
 
-// Create reports table
+
 const createReportsTable = async () => {
   const query = `
     CREATE TABLE IF NOT EXISTS reports (
@@ -141,12 +140,34 @@ const createReportsTable = async () => {
   }
 };
 
-// Initialize all tables
+
+const createTestsTable = async () => {
+  const query  = `
+  
+  CREATE TABLE IF NOT EXISTS tests (
+  id SERIAL PRIMARY KEY,
+  user_id INT,
+  test_name VARCHAR(255) NOT NULL,
+  doctor_name VARCHAR(255) NOT NULL,
+  test_for_person VARCHAR(255) NOT NULL,
+  test_date DATE NOT NULL ,
+  lab_name VARCHAR(255)
+  
+  );
+  `;
+  try {
+    await client.query(query);
+    console.log('Test table is ready');
+  } catch (err) {
+    console.error('Error creating tests table:', err.message);
+  }
+};
 const initializeTables = async () => {
   await createUsersTable();
   await createMedicationsTable();
   await createRemainderTable();
   await createReportsTable();
+  await createTestsTable();
 };
 initializeTables();
 
@@ -373,8 +394,7 @@ app.get("/remainder-count/:user_id", async (req, res) => {
   }
 });
 
-// ============== REPORTS ROUTES (from report.js) ==============
-// CREATE report (with optional PDF)
+
 app.post('/reports', authenticate, upload.single('report_pdf'), async (req, res) => {
   try {
     console.log('Body:', req.body);
@@ -412,12 +432,12 @@ app.get('/reports/user/:user_id', authenticate, async (req, res) => {
   }
 });
 
-// DELETE a report by ID (removes PDF too)
+
 app.delete('/reports/:id/user/:user_id', authenticate, async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Get PDF path
+    
     const report = await client.query('SELECT pdf_path FROM reports WHERE id=$1', [id]);
     const pdf_path = report.rows[0]?.pdf_path;
     if (pdf_path && fs.existsSync(pdf_path)) {
@@ -432,6 +452,59 @@ app.delete('/reports/:id/user/:user_id', authenticate, async (req, res) => {
   }
 });
 
+app.post('/tests', async (req, res) => {
+  try {
+    console.log('Body:', req.body);
+    console.log('File:', req.file);
+
+    const { user_id, test_name, doctor_name, test_date,test_for_person, lab_name } = req.body;
+    
+
+    const result = await client.query(
+      `INSERT INTO tests 
+       (user_id, test_name, doctor_name, test_date,test_for_person, lab_name) 
+       VALUES ($1,$2,$3,$4,$5) RETURNING *`,
+      [user_id, test_name, doctor_name, test_date,test_for_person, lab_name]
+    );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error creating test table:', err);
+    res.status(500).json({ error: 'Failed to create test table' });
+  }
+});
+
+// READ reports for a user
+app.get('/tests/user/:user_id', authenticate, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const result = await client.query(
+      'SELECT * FROM tests WHERE user_id=$1 ORDER BY id DESC',
+      [user_id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching tests:', err);
+    res.status(500).json({ error: 'Failed to fetch tests' });
+  }
+});
+
+
+app.delete('/tests/:id/user/:user_id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    
+    
+    
+    await client.query('DELETE FROM tests WHERE id=$1', [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting test:', err);
+    res.status(500).json({ error: 'Failed to delete test' });
+  }
+});
+
 // ============== TEST ROUTE ==============
 app.get('/test', (req, res) => {
   res.json({ 
@@ -441,7 +514,7 @@ app.get('/test', (req, res) => {
   });
 });
 
-// ============== HEALTH CHECK ==============
+
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'healthy',
@@ -473,6 +546,9 @@ app.listen(PORT,'0.0.0.0', () => {
   console.log('     POST   /reports (with PDF upload)');
   console.log('     GET    /reports/user/:user_id');
   console.log('     DELETE /reports/:id/user/:user_id');
+  console.log('     POST   /tests');
+  console.log('     GET    /tests/user/:user_id');
+  console.log('     DELETE /tests/:id/user/:user_id');
   console.log('   ➜ Utilities:');
   console.log('     GET    /test');
   console.log('     GET    /health');
